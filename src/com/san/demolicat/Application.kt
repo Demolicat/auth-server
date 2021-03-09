@@ -47,9 +47,12 @@ fun Application.module(testing: Boolean = false) {
 
         post("register") {
             val credentials = call.receive<UserPasswordCredential>()
-            //TODO save user to DB
             userSource.registerNewUser(credentials).let {
-                call.respond(it)
+                if (it) {
+                    call.respond("Successfull login")
+                } else {
+                    call.respond(HttpStatusCode.Unauthorized, "Username is already in used")
+                }
             }
         }
 
